@@ -1,0 +1,85 @@
+terraform {
+    required_providers {
+        aws = {
+        source  = "hashicorp/aws"
+        #version = "~> 5.0" # This will allow any version from 5.0 to less than 6.0
+        version = "5.65.0"
+        }
+    }
+    
+    required_version = ">= 1.0.0" #1.9.4
+    #required_version = "1.9.4" 
+}
+
+provider "aws" {
+    region = "us-east-1"
+    shared_credentials_files = ["../.secrets/credentials"]
+    profile = "default"
+  
+}
+
+# data "aws_ami" "app_ami" {
+#   most_recent = true
+#   owners = ["amazon"]
+
+#     filter {
+#         name   = "name"
+#         values = ["amzn2-ami-hvm*"]
+#     }
+# }
+
+# Elastic IP
+resource "aws_eip" "my_eip" {
+  # Removed deprecated 'vpc' argument
+}
+
+resource "aws_instance" "myec2" {
+    ami = "ami-005fc0f236362e99f"
+    instance_type = "t2.micro"
+    key_name = "ssh-key"
+
+    tags = {
+        Name = "ec2-cfk"
+    }
+ 
+    # root_block_device {
+    #   delete_on_termination = true
+    # }
+}
+
+
+resource "aws_security_group" "my_sg" {
+  name        = "security_group-TP2"
+  description = "Security group for my instances"
+
+  # Permettre les connexions SSH sur le port 22
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Permet l'accès depuis n'importe quelle adresse IP
+  }
+
+  # Permettre les connexions HTTP sur le port 80
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Permet l'accès depuis n'importe quelle adresse IP
+  }
+
+  # Sortie autorisée pour toutes les connexions
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  # Tout protocole
+    cidr_blocks = ["0.0.0.0/0"]  # Permet la sortie vers n'importe quelle adresse IP
+  }
+}
+
+
+resource "aws_eip_association" "my_eip_assoc" {
+  instance_id = aws_instance.myec2.id
+  allocation_id = aws_eip.my_eip.id
+}
+

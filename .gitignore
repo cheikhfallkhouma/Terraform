@@ -1,0 +1,30 @@
+.secrets/
+.terraform/
+
+# Ignorer tous les dossiers .terraform, même en sous-dossiers
+**/.terraform/
+
+# Fichiers d'état Terraform (sensibles)
+*.tfstate
+*.tfstate.backup
+
+# Fichiers de plan (gros binaires inutiles)
+*.tfplan
+
+# Fichiers de log et de crash
+crash.log
+
+# Fichiers secrets potentiels
+*.pem
+*.key
+*.crt
+*.env
+*.tfvars
+.secrets/
+
+# Fichiers binaires ou archives lourdes
+*.zip
+*.tar.gz
+*.exe
+*.bin
+
