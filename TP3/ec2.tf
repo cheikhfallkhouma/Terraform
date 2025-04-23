@@ -53,6 +53,16 @@ resource "aws_security_group" "my_sg_allow_http_https_ssh" {
     cidr_blocks = ["0.0.0.0/0"]  # Permet l'accès depuis n'importe quelle adresse IP
   }
 
+# Autoriser le SSH (port 22)
+ingress {
+  description = "SSH access"
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]  # Ou utilise ton IP publique pour plus de sécurité
+}
+
+
   # Sortie autorisée pour toutes les connexions
   egress {
     description = "Allow all outbound traffic"
