@@ -144,7 +144,7 @@ data "aws_ami" "ami_amazon_linux" {
 
 terraform {
   backend "s3" {
-    bucket     = "terraform-backend-cheikh-fall"  # doit correspondre au bucket ci-dessus
+    bucket     = "terraform-backend-cheikh-fall"  # doit correspondre au bucket créé dans aws
     key        = "cheikh-fall.tfstate"
     region     = "us-east-1"
   }
